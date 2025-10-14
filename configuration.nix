@@ -202,6 +202,31 @@
     options v4l2loopback exclusive_caps=1 card_label="DroidCam"
   '';
 
+  # g810-led package + profile
+  services.g810-led = {
+    enable = true;
+    profile =
+    ''
+    # G512-LED Profile (turn all keys on)
+  
+    # Set all keys on
+    a ff0000
+  
+    # Commit changes
+    c
+    '';
+  };
+
+systemd.services.g810-led-apply = {
+  description = "Apply g810-led profile to Logitech G512 keyboard";
+  after = [ "systemd-udev-settle.service" ];
+  wantedBy = [ "multi-user.target" ];
+  serviceConfig = {
+    Type = "oneshot";
+    ExecStart = "${pkgs.g810-led}/bin/g810-led -p /etc/g810-led/profile";
+  };
+};
+
 # nix.settings.experimental-features = [ "nix-command" "flakes" ];
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -216,8 +241,8 @@
     vscode
     discord
     gitkraken
-    solaar
     usbutils
+    g810-led
   ];
   
   environment.sessionVariables = {
