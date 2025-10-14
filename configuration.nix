@@ -216,6 +216,8 @@
     vscode
     discord
     gitkraken
+    solaar
+    usbutils
   ];
   
   environment.sessionVariables = {
