@@ -15,8 +15,7 @@
   boot.loader.efi.canTouchEfiVariables = true;
   
   # Use latest kernel.
-  boot.kernelPackages = pkgs.linuxPackages_latest;
-#  boot.kernelPackages = pkgs.linuxPackages_6_16;  
+  boot.kernelPackages = pkgs.linuxPackages_latest; 
   boot.blacklistedKernelModules = [ "nouveau" ];  
   boot.kernelModules = [ 
     "nvidia"
@@ -73,7 +72,7 @@
   # Configure keymap in X11
   services.xserver.xkb = {
     layout = "be";
-    variant = "nodeadkeys";
+    variant = "";
   };
 
   # Configure console keymap
@@ -96,7 +95,7 @@
     alsa.support32Bit = true;
     pulse.enable = true;
     # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
+    jack.enable = true;
 
     # use the example session manager (no others are packaged yet so this is enabled by default,
     # no need to redefine it in your config for now)
@@ -172,6 +171,17 @@
   # Install firefox.
   programs.firefox.enable = false;
 
+  # Install hyprland
+  programs.hyprland = {
+    enable = true;
+    xwayland.enable = true;
+  };
+
+  environment.sessionVariables = {
+    WLR_NO_HARDWARE_CURSORS = "1";
+    NIXOS_OZONE_WL = "1";
+  };
+
   # Install git
   programs.git = {
     enable = true;
@@ -202,30 +212,7 @@
     options v4l2loopback exclusive_caps=1 card_label="DroidCam"
   '';
 
-  # g810-led package + profile
-  services.g810-led = {
-    enable = true;
-    profile =
-    ''
-    # G512-LED Profile (turn all keys on)
-  
-    # Set all keys on
-    a ff0000
-  
-    # Commit changes
-    c
-    '';
-  };
-
-systemd.services.g810-led-apply = {
-  description = "Apply g810-led profile to Logitech G512 keyboard";
-  after = [ "systemd-udev-settle.service" ];
-  wantedBy = [ "multi-user.target" ];
-  serviceConfig = {
-    Type = "oneshot";
-    ExecStart = "${pkgs.g810-led}/bin/g810-led -p /etc/g810-led/profile";
-  };
-};
+services.ratbagd.enable = true;
 
 # nix.settings.experimental-features = [ "nix-command" "flakes" ];
   # List packages installed in system profile. To search, run:
@@ -242,8 +229,24 @@ systemd.services.g810-led-apply = {
     discord
     gitkraken
     usbutils
-    g810-led
+    piper
+    hypnotix
+    waybar
+    (waybar.overrideAttrs (oldAttrs: {
+      mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ];
+      })
+    )
+    mako
+    libnotify
+    swww
+    kitty
+    rofi
   ];
+
+  xdg.portal = {
+    enable = true;
+    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+  };
   
   environment.sessionVariables = {
     STEAM_EXTRA_COMPAT_TOOLS_PATH =
