@@ -214,6 +214,7 @@
     ntfs3g
     vscode
     discord
+    gitkraken
   ];
   
   environment.sessionVariables = {
