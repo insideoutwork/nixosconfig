@@ -83,6 +83,7 @@
   services.printing.enable = true;
 
   hardware.bluetooth.enable = true;
+  hardware.bluetooth.powerOnBoot = true;
 
   security.sudo.wheelNeedsPassword = false;
 
