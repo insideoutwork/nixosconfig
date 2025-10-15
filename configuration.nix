@@ -251,6 +251,7 @@
     kitty
     rofi
     networkmanagerapplet
+    wl-gammarelay-rs
   ];
 
   xdg.portal = {
