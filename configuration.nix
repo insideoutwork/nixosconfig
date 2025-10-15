@@ -212,7 +212,16 @@
     options v4l2loopback exclusive_caps=1 card_label="DroidCam"
   '';
 
-services.ratbagd.enable = true;
+  services.ratbagd.enable = true;
+
+  services.flatpak.enable = true;
+  services.flatpak.packages = [
+    "com.stremio.Stremio"
+  ];
+  services.flatpak.update.auto = {
+  enable = true;
+  onCalendar = "weekly"; # Default value
+  };
 
 # nix.settings.experimental-features = [ "nix-command" "flakes" ];
   # List packages installed in system profile. To search, run:
@@ -241,6 +250,7 @@ services.ratbagd.enable = true;
     swww
     kitty
     rofi
+    networkmanagerapplet
   ];
 
   xdg.portal = {
